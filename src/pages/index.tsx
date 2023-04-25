@@ -8,6 +8,9 @@ import { api } from "~/utils/api";
 const Home: NextPage = () => {
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
 
+  const all = api.example.getAll.useQuery();
+  console.log(all.data);
+
   return (
     <>
       <Head>
@@ -49,6 +52,18 @@ const Home: NextPage = () => {
               {hello.data ? hello.data.greeting : "Loading tRPC query..."}
             </p>
             <AuthShowcase />
+            {all.data && all.data.length > 0 && (
+              <div className="flex flex-col gap-2">
+                <p className="text-2xl text-white">All example ids:</p>
+                <ul className="flex flex-col gap-2">
+                  {all.data.map((example) => (
+                    <li key={example.id} className="text-white">
+                      {example.id} - {example.createdAt.toISOString()}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         </div>
       </main>
@@ -63,7 +78,7 @@ const AuthShowcase: React.FC = () => {
 
   const { data: secretMessage } = api.example.getSecretMessage.useQuery(
     undefined, // no input
-    { enabled: sessionData?.user !== undefined },
+    { enabled: sessionData?.user !== undefined }
   );
 
   return (
