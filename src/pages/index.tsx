@@ -2,6 +2,9 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
 
 import { RouterOutputs, api } from "~/utils/api";
 import Image from "next/image";
@@ -51,9 +54,9 @@ const PostView = (props: PostWithUser) => {
         className="rounded-full"
       />
       <div className="flex flex-col">
-        <div className="flex text-slate-300">
-          <span>{`@${author.name}`}</span> ·{" "}
-          <span>{post.createdAt.toISOString()}</span>
+        <div className="flex gap-1 text-slate-300">
+          <span className="">{`@${author.name}`}</span>
+          <span className="font-thin">· {dayjs(post.createdAt).fromNow()}</span>
         </div>
         <span className="">{post.content}</span>
       </div>
