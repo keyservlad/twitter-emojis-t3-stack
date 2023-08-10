@@ -7,8 +7,9 @@ dayjs.extend(relativeTime);
 
 import { api, type RouterOutputs } from "~/utils/api";
 import Image from "next/image";
-import { LoadingPage } from "~/components/loading";
+import LoadingSpinner, { LoadingPage } from "~/components/loading";
 import { useState } from "react";
+import { toast } from "react-hot-toast";
 
 const CreatePostWizard = () => {
   const { data: user } = useSession();
@@ -22,6 +23,14 @@ const CreatePostWizard = () => {
       onSuccess: () => {
         setInput("");
         void ctx.posts.getAll.invalidate();
+      },
+      onError: (err) => {
+        const errorMessage = err.data?.zodError?.fieldErrors.content;
+        if (errorMessage && typeof errorMessage[0] === "string") {
+          toast.error(errorMessage[0]);
+        } else {
+          toast.error("Something went wrong");
+        }
       },
     });
 
@@ -52,15 +61,32 @@ const CreatePostWizard = () => {
         onChange={(e) => setInput(e.target.value)}
         type="text"
         disabled={isPosting}
-      />
-      <button
-        className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-        onClick={() => {
-          void createPost({ content: input });
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            if (input.length > 0) {
+              void createPost({ content: input });
+            }
+          }
         }}
-      >
-        Post
-      </button>
+      />
+      {input.length > 0 && !isPosting && (
+        <button
+          className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
+          onClick={() => {
+            void createPost({ content: input });
+          }}
+          disabled={isPosting}
+        >
+          Post
+        </button>
+      )}
+
+      {isPosting && (
+        <div className="flex items-center justify-center">
+          <LoadingSpinner size={20} />
+        </div>
+      )}
     </div>
   );
 };
