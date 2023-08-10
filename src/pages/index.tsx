@@ -1,6 +1,5 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -8,6 +7,7 @@ dayjs.extend(relativeTime);
 
 import { RouterOutputs, api } from "~/utils/api";
 import Image from "next/image";
+import { LoadingPage } from "~/components/loading";
 
 const CreatePostWizard = () => {
   const { data: user } = useSession();
@@ -64,13 +64,29 @@ const PostView = (props: PostWithUser) => {
   );
 };
 
-const Home: NextPage = () => {
-  const { data: sessionData } = useSession();
+const Feed = () => {
+  const { data, isLoading: isPostsLoading } = api.posts.getAll.useQuery();
 
-  const { data, isLoading } = api.posts.getAll.useQuery();
-
-  if (isLoading) return <div>Loading...</div>;
+  if (isPostsLoading) return <LoadingPage />;
   if (!data) return <div>Something went wrong</div>;
+
+  return (
+    <div className="flex flex-col">
+      {data.map((fullPost) => (
+        <PostView {...fullPost} key={fullPost.post.id} />
+      ))}
+    </div>
+  );
+};
+
+const Home: NextPage = () => {
+  const { data: sessionData, status: userLoaded } = useSession();
+
+  // start fetching asap
+  api.posts.getAll.useQuery();
+
+  // return empty div if user is loading and posts are loading as user thends to load first
+  if (userLoaded === "loading") return <div />;
 
   return (
     <>
@@ -95,11 +111,7 @@ const Home: NextPage = () => {
               </button>
             )}
           </div>
-          <div className="flex flex-col">
-            {data.map((fullPost) => (
-              <PostView {...fullPost} key={fullPost.post.id} />
-            ))}
-          </div>
+          <Feed />
         </div>
       </main>
     </>
