@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
 
-import { RouterOutputs, api } from "~/utils/api";
+import { api, type RouterOutputs } from "~/utils/api";
 import Image from "next/image";
 import { LoadingPage } from "~/components/loading";
 import { useState } from "react";
@@ -21,7 +21,7 @@ const CreatePostWizard = () => {
     api.posts.create.useMutation({
       onSuccess: () => {
         setInput("");
-        ctx.posts.getAll.invalidate();
+        void ctx.posts.getAll.invalidate();
       },
     });
 
