@@ -10,6 +10,7 @@ import Image from "next/image";
 import LoadingSpinner, { LoadingPage } from "~/components/loading";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
+import Link from "next/link";
 
 const CreatePostWizard = () => {
   const { data: user } = useSession();
@@ -106,8 +107,14 @@ const PostView = (props: PostWithUser) => {
       />
       <div className="flex flex-col">
         <div className="flex gap-1 text-slate-300">
-          <span className="">{`@${author.name}`}</span>
-          <span className="font-thin">· {dayjs(post.createdAt).fromNow()}</span>
+          <Link href={`/@${author.name}`}>
+            <span className="">{`@${author.name}`}</span>
+          </Link>
+          <Link href={`/post/${post.id}`}>
+            <span className="font-thin">
+              · {dayjs(post.createdAt).fromNow()}
+            </span>
+          </Link>
         </div>
         <span className="text-xl">{post.content}</span>
       </div>
