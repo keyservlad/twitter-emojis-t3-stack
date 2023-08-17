@@ -11,6 +11,7 @@ import LoadingSpinner, { LoadingPage } from "~/components/loading";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import Link from "next/link";
+import PageLayout from "~/components/layout";
 
 const CreatePostWizard = () => {
   const { data: user } = useSession();
@@ -148,30 +149,21 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <Head>
-        <title>Twitter emojis</title>
-        <meta name="description" content="twitter but only with emojis" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <main className="flex h-screen justify-center">
-        <div className="h-full w-full border-x border-slate-400 md:max-w-2xl">
-          <div className="flex justify-center border-b border-slate-400 p-4">
-            {sessionData ? (
-              <CreatePostWizard />
-            ) : (
-              <button
-                className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-                onClick={
-                  sessionData ? () => void signOut() : () => void signIn()
-                }
-              >
-                {sessionData ? "Sign out" : "Sign in"}
-              </button>
-            )}
-          </div>
-          <Feed />
+      <PageLayout>
+        <div className="flex justify-center border-b border-slate-400 p-4">
+          {sessionData ? (
+            <CreatePostWizard />
+          ) : (
+            <button
+              className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
+              onClick={sessionData ? () => void signOut() : () => void signIn()}
+            >
+              {sessionData ? "Sign out" : "Sign in"}
+            </button>
+          )}
         </div>
-      </main>
+        <Feed />
+      </PageLayout>
     </>
   );
 };

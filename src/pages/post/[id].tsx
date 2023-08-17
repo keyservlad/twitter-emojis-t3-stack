@@ -5,13 +5,11 @@ const SinglePostPage: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Twitter emojis</title>
-        <meta name="description" content="twitter but only with emojis" />
-        <link rel="icon" href="/favicon.ico" />
+        <title>Post</title>
       </Head>
       <main className="flex h-screen justify-center">
         <div className="h-full w-full border-x border-slate-400 md:max-w-2xl">
-          Profile View
+          Post View
         </div>
       </main>
     </>
