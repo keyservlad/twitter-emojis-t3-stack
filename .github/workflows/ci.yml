@@ -4,6 +4,11 @@ on: [push, pull_request]
 
 env:
   DATABASE_URL: "https://fake.com"
+  NEXTAUTH_SECRET: "secret"
+  NEXTAUTH_URL: "http://localhost:3000"
+
+  DISCORD_CLIENT_ID: "000"
+  DISCORD_CLIENT_SECRET: "000"
 
 jobs:
   build:
