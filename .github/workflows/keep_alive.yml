@@ -1,0 +1,33 @@
+name: Keep alive cron job
+
+on:
+  schedule:
+    - cron: '0 12 * * *' # Daily at 12:00 PM UTC (adjust as needed)
+
+env:
+    NEXTAUTH_SECRET: "secret"
+
+jobs:
+  cron:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16' 
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Call endpoint to keep the database alive
+        run: |
+          SECRET="$NEXTAUTH_SECRET"
+          URL="https://twitter-emojis-five.vercel.app/api/keep-alive"
+          
+          curl --request POST \
+            --url "$URL" \
+            --data "content=$SECRET"
