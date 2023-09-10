@@ -26,8 +26,7 @@ jobs:
       - name: Call endpoint to keep the database alive
         run: |
           SECRET="$NEXTAUTH_SECRET"
-          URL="https://twitter-emojis-five.vercel.app/api/keep-alive"
+          URL="https://twitter-emojis-five.vercel.app/api/keep-alive?content=$SECRET"
           
           curl --request POST \
             --url "$URL" \
-            --data "content=$SECRET"

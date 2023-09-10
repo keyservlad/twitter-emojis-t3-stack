@@ -18,6 +18,7 @@ const keepAlive = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const { content } = req.query;
     if (content !== "secret") {
+      
       throw new TRPCError({
         code: "UNAUTHORIZED",
       });
